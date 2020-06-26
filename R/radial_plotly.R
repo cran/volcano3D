@@ -23,6 +23,11 @@
 #' @param fc_or_zscore Whether to use the z-score or fold change as magnitude.
 #' Options are 'zscore' (default) or 'fc'.
 #' @param label_size Font size of labels/annotations (default = 14)
+#' @param colour_code_labels Logical whether label annotations should be colour
+#' coded. If FALSE label_colour is used.
+#' @param label_colour HTML colour of annotation labels if not colour coded. 
+#' @param grid_colour The colour of the grid (default="grey80"). 
+#' @param axis_colour The colour of the grid axes and labels (default="black").
 #' @param marker_size Size of the markers (default = 6).
 #' @param marker_alpha Opacity for the markers (default = 0.7).
 #' @param marker_outline_colour Colour for marker outline (default = white)
@@ -77,6 +82,10 @@ radial_plotly <- function(polar,
                           grid = NULL,
                           fc_or_zscore = "zscore",
                           label_size = 14,
+                          colour_code_labels = TRUE,
+                          label_colour = NULL,
+                          grid_colour = "grey80", 
+                          axis_colour = "black",
                           marker_size = 6,
                           marker_alpha = 0.7,
                           marker_outline_colour = "white",
@@ -113,6 +122,9 @@ radial_plotly <- function(polar,
     }
     if(is.null(non_sig_colour)){
         stop('Please enter a valid non_sig_colour')
+    }
+    if(! colour_code_labels & is.null(label_colour)){
+        stop('If colour_code_labels is false please enter a valid label_colour')
     }
 
     # check if hex or can be converted to hex
@@ -216,16 +228,17 @@ radial_plotly <- function(polar,
         annot <- lapply(label_rows, function(i) {
             row  <- polar_df[i, ]
             theta <- atan(row$y/row$x)
+            if(colour_code_labels) ac <- row$col else ac <- label_colour 
             list(x = row$x,
                  y = row$y,
                  text = as.character(row$label),
                  textangle = 0,
                  ax = sign(row$x)*arrow_length*grid@r*cos(theta),
                  ay  = -1*sign(row$x)*arrow_length*grid@r*sin(theta),
-                 font = list(color = row$col, size = label_size),
-                 arrowcolor = row$col,
+                 font = list(color = ac, size = label_size),
+                 arrowcolor = ac,
                  arrowwidth = 1,
-                 arrowhead = 6,
+                 arrowhead = 0,
                  xanchor = ifelse(row$x < 0, "right", "left"),
                  xanchor = ifelse(row$y < 0, "bottom", "top"),
                  arrowsize = 1.5)
@@ -243,17 +256,17 @@ radial_plotly <- function(polar,
                  source = "BOTH", 
                  showlegend = FALSE) %>%
         # add the grid
-        add_trace(x = polar_grid$x, y = polar_grid$y, color = I("#CBCBCB"),
+        add_trace(x = polar_grid$x, y = polar_grid$y, color = I(grid_colour),
                   line = list(width = 1), showlegend = FALSE, type = "scatter",
                   mode = "lines", hoverinfo = "none") %>%
         # add the "horizontal" axes
-        add_trace(x = axes$x, y = axes$y, color = I("black"),
+        add_trace(x = axes$x, y = axes$y, color = I(axis_colour),
                   line = list(width = 2), showlegend = FALSE, type = "scatter",
                   mode = "lines", hoverinfo = "none", inherit = FALSE) %>%
         # add the label text
         add_text(x = axis_labs$x, y = axis_labs$y, 
                  text = levels(polar@sampledata[, polar@contrast]),
-                 color = I("black"), type = "scatter", mode = "text",
+                 color = I(axis_colour), type = "scatter", mode = "text",
                  textfont = list(size = axis_title_size),
                  textposition = axis_labs$adjust, hoverinfo = 'none',
                  showlegend = FALSE, inherit = FALSE) %>%
@@ -274,8 +287,9 @@ radial_plotly <- function(polar,
         # label radial axis
         add_text(x = text_coords$x, y = -text_coords$y,
                  text = text_coords$text, textposition = 'top center',
-                 textfont = list(size = axis_label_size), color = I("black"),
-                 hoverinfo = 'none', showlegend = FALSE, inherit = FALSE) %>%
+                 textfont = list(size = axis_label_size), 
+                 color = I(axis_colour), hoverinfo = 'none', 
+                 showlegend = FALSE, inherit = FALSE) %>%
         # add the markers
         add_markers(data = polar_df, x = ~x, y = ~y, key = ~label,
                     opacity = marker_alpha,

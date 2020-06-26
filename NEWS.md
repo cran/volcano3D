@@ -1,7 +1,19 @@
 News
 =====
 
+# volcano3D 1.0.1
+###### 26/06/2020
+
+* update vignette for CRAN (remove WebGL)
+* update default plotly parameters
+* Allow optional colour coding of labels in radial plots
+* remove ggplot warnings of NA in geom_path 
+* Allow colour of grids and axes to be changed
+* Convert 3D labels to annotations 
+
+
 # volcano3D 1.0.0
+###### 29/05/2020
 
 * Combined create\_dep and polar\_coord functions so no longer backwards compatible. 
 * Combined the 3D and 2D functions of polar\_grid
@@ -16,5 +28,6 @@ News
 * Improve polar_coords speed
 
 # volcano3D 0.1.0
+###### 27/04/2020
 
-* This is the initial release of volcano3D
+* This is the initial build of volcano3D

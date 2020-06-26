@@ -24,20 +24,26 @@ library(usethis)
 ## -----------------------------------------------------------------------------
 library(volcano3D)
 
+## -----------------------------------------------------------------------------
+data("example_data")
+
+## -----------------------------------------------------------------------------
+kable(table(syn_example_meta$Pathotype), col.names = c("Pathotype", "Count"))
+
 ## ---- echo=FALSE--------------------------------------------------------------
 mytable = data.frame(
   sampledata = c("sampledata\ 
   \n\n(required)", 
   "This shows information for each sample in rows and must contain:\ 
                 \n * an ID column: Containing the sample IDs. This must be titled ‘ID’.\ 
-                \n * a contrast column: A column containing the three-level factor used for contrasts.\ 
+                \n * a contrast column: Indicates which of the three groups each sample belongs to.\ 
                 \n \n"), 
   contrast = c("contrast\ 
                \n\n(required)", 
-               "The column name in sampledata which contains the three-level factor used for contrast"), 
+               "The column name in sampledata which contains the three-level factor to be used for contrast"), 
   pvalues = c("pvalues\ 
               \n\n(required)", 
-              "the pvalues data.frame which contains the statistical\
+              "the pvalues data frame which contains the statistical\
                 significance of probes between groups. This contains: \
               \n * three pvalue columns: one for each comparison with \
               column names of format `paste(groups[i], groups[j], p_col_suffix, sep='_')`.\ 
@@ -127,8 +133,9 @@ syn_plots <- volcano_trio(polar = syn_polar,
 
 syn_plots$All
 
-## ---- fig.height=5------------------------------------------------------------
-radial_plotly(polar = syn_polar, label_rows = c("SLAMF6", "GREM2", "FMOD")) 
+## ---- eval=FALSE, fig.height=5------------------------------------------------
+#  radial_plotly(polar = syn_polar, label_rows = c("SLAMF6", "GREM2", "FMOD"),
+#                grid_colour="pink", axis_colour="blue")
 
 ## ---- fig.height=4.5, fig.width=7---------------------------------------------
 radial_ggplot(polar = syn_polar,
@@ -150,7 +157,8 @@ plot2 <- boxplot_trio(syn_polar,
                       box_colours = c("violet", "gold2"),
                       levels_order = c("Lymphoid", "Fibroid"),
                       text_size = 7,
-                      test = "polar_padj")
+                      test = "polar_padj"
+                      )
 
 plot3 <- boxplot_trio(syn_polar,
                       value = "FMOD",
@@ -162,17 +170,23 @@ plot3 <- boxplot_trio(syn_polar,
 
 ggarrange(plot1, plot2, plot3, ncol=3)
 
-## ---- fig.height=5------------------------------------------------------------
-p <- volcano3D(syn_polar,
-               label_rows = c("SLAMF6", "GREM2", "FMOD"),
-               label_size = 10,
-               xy_aspectratio = 1,
-               z_aspectratio = 0.9, 
-               plot_height = 700)
-p
+## ---- eval=FALSE, fig.height=5------------------------------------------------
+#  p <- volcano3D(syn_polar,
+#                 label_rows = c("SLAMF6", "GREM2", "FMOD"),
+#                 label_size = 10,
+#                 xy_aspectratio = 1,
+#                 z_aspectratio = 0.9,
+#                 plot_height = 700)
+#  p
+
+## ---- eval=FALSE--------------------------------------------------------------
+#  p %>% plotly::config(toImageButtonOptions = list(format = "svg"))
 
 ## ---- eval = FALSE------------------------------------------------------------
 #  orca(p, "./volcano_3d_synovium.svg", format = "svg")
+
+## ---- eval=FALSE--------------------------------------------------------------
+#  htmlwidgets::saveWidget(as_widget(p), "volcano3D.html")
 
 ## -----------------------------------------------------------------------------
 citation("volcano3D")

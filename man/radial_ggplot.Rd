@@ -15,6 +15,10 @@ radial_ggplot(
   grid = NULL,
   fc_or_zscore = "zscore",
   label_size = 5,
+  colour_code_labels = TRUE,
+  label_colour = NULL,
+  grid_colour = "grey80",
+  axis_colour = "black",
   axis_title_size = 5,
   axis_label_size = 3,
   marker_alpha = 0.7,
@@ -57,6 +61,15 @@ default values of  \code{\link{polar_grid}}.}
 Options are 'zscore' (default) or 'fc'.}
 
 \item{label_size}{Font size of labels/annotations (default = 5).}
+
+\item{colour_code_labels}{Logical whether label annotations should be colour
+coded. If FALSE label_colour is used.}
+
+\item{label_colour}{Colour of annotation labels if not colour coded.}
+
+\item{grid_colour}{The colour of the grid (default="grey80").}
+
+\item{axis_colour}{The colour of the grid axes and labels (default="black").}
 
 \item{axis_title_size}{Font size for axis titles (default = 5)}
 
