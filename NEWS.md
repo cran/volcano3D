@@ -1,6 +1,24 @@
 News
 =====
 
+# volcano3D 1.1.0
+###### 04/02/2021
+* allow colour coding to be based on pvalue or adjusted pvalue according to cutoff_criteria
+* allow subsetting by significance groups with the significance_subset function
+
+# volcano3D 1.0.3
+###### 15/08/2020
+* fix legend dropping levels in volcano_trio
+* update volcano3D xy limits to prevent titles disappearing
+* allow flexible colour-coding in standard volcano plot
+
+# volcano3D 1.0.2
+###### 03/07/2020
+
+* add offset for 3D axis titles
+* Allow changes to the hover text 
+
+
 # volcano3D 1.0.1
 ###### 26/06/2020
 

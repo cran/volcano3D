@@ -121,11 +121,12 @@ table(syn_polar@polar$sig) %>%
 
 ## ---- fig.height=2.8, fig.width=7---------------------------------------------
 syn_plots <- volcano_trio(polar = syn_polar,
-                          sig_names = c("not significant","significant",
-                                        "not significant","significant"),
-                          colours = rep(c("grey60",  "slateblue1"), 2),
+                          sig_names = c("significant", "significant",
+                                        "not significant", "not significant"),
+                          colours = rep(c("slateblue1",  "grey60"), each=2),
+                          colour_scheme="none", 
                           text_size = 9,
-                          marker_size=1,
+                          marker_size=1.5,
                           shared_legend_size = 0.9,
                           label_rows = c("SLAMF6", "BOC", "FMOD"),
                           fc_line = FALSE, 
@@ -134,8 +135,7 @@ syn_plots <- volcano_trio(polar = syn_polar,
 syn_plots$All
 
 ## ---- eval=FALSE, fig.height=5------------------------------------------------
-#  radial_plotly(polar = syn_polar, label_rows = c("SLAMF6", "GREM2", "FMOD"),
-#                grid_colour="pink", axis_colour="blue")
+#  radial_plotly(polar = syn_polar, label_rows = c("SLAMF6", "GREM2", "FMOD"))
 
 ## ---- fig.height=4.5, fig.width=7---------------------------------------------
 radial_ggplot(polar = syn_polar,
@@ -175,6 +175,7 @@ ggarrange(plot1, plot2, plot3, ncol=3)
 #                 label_rows = c("SLAMF6", "GREM2", "FMOD"),
 #                 label_size = 10,
 #                 xy_aspectratio = 1,
+#                 title_offset = 1.5,
 #                 z_aspectratio = 0.9,
 #                 plot_height = 700)
 #  p

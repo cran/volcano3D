@@ -14,6 +14,8 @@
 #' to offset the continuous colour scale by. This is calculated by converting 
 #' the angle to a hue using \code{\link[grDevices]{hsv}} where 0 corresponds to
 #' the colour scale starting with red and 2 with magenta (default = 2). 
+#' @param axis_title_offset The position scaling between grid and axis titles 
+#' (default=1.2)
 #' @param label_rows A vector of row names or numbers to label.
 #' @param arrow_length The length of label arrows (default = 50).
 #' @param grid An optional grid object. If NULL this will be calculated using 
@@ -24,6 +26,22 @@
 #' @param colour_code_labels Logical whether label annotations should be colour
 #' coded. If FALSE label_colour is used.
 #' @param label_colour HTML colour of annotation labels if not colour coded.
+#' @param hover_text A character string containing the argument for hover text
+#' (default="label"). Possible columns include: \itemize{
+#' \item "Name" or "label": name and label column for each marker
+#' \item paste(group, "_axis") the position for each marker on a given axis
+#' \item "x_zscore", "y_zscore" or "r_zscore": The position according to z-score
+#' \item "x_fc", "y_fc" or "r_fc": The position according to fold change
+#' \item "angle", "angle_degrees": Then marker angle
+#' \item "max_exp" or "sig": The maximally expressed group or significant group
+#' \item "col" or "hue": The colour or hue of the marker
+#' \item paste0(group 1, "_", group 2, "_pvalue"): The pvalue for comparisons
+#' \item paste0(group 1, "_", group 2, "_padj"): The pvalue for comparisons
+#' \item paste0(group 1, "_", group 2, "_logFC"): The pvalue for comparisons
+#' \item paste0(multi_group_test, "_pvalue"), 
+#' paste0(multi_group_test, "_padj"), paste0(multi_group_test, "_logFC"): 
+#' The stats for all multi-group tests.
+#' }
 #' @param grid_colour The colour of the cylindrical grid (default="grey80"). 
 #' @param axis_colour The colour of the grid axes and labels (default="black").
 #' @param marker_size Size of the markers (default = 2.7).
@@ -78,6 +96,7 @@ volcano3D <- function(polar,
                       non_sig_colour = "grey60",
                       colour_scale = "discrete",
                       continuous_shift = 1.33, 
+                      axis_title_offset = 1.2,
                       label_rows = c(),
                       grid = NULL, 
                       fc_or_zscore = "zscore",
@@ -85,6 +104,7 @@ volcano3D <- function(polar,
                       arrow_length=50, 
                       colour_code_labels = TRUE,
                       label_colour = NULL,
+                      hover_text = "label",
                       grid_colour = "grey80", 
                       axis_colour = "black",
                       marker_size = 2.7,
@@ -98,7 +118,12 @@ volcano3D <- function(polar,
                       ...){
     
     if(! class(polar) %in% c("polar")) stop("polar must be a polar object")
-    polar_df <- polar@polar
+    polar_df <- cbind(polar@polar, polar@pvalues)
+    
+    polar_df$hover <- eval(parse(
+        text = paste0("with(polar_df, ", hover_text, ")")))
+    
+    polar_df <- polar_df[, c(colnames(polar@polar), "hover")]
     
     if(! colour_code_labels & is.null(label_colour)){
         stop('If colour_code_labels is false please enter a valid label_colour')
@@ -244,7 +269,8 @@ volcano3D <- function(polar,
         })
     } else {annot <- list()}
     
-    axis_settings_xy[['range']] <- c(-1*(grid@r+1), grid@r+1)
+    axis_settings_xy[['range']] <- c(-1.05*axis_title_offset*(grid@r+1), 
+                                     1.05*axis_title_offset*(grid@r+1))
     
     plot_ly(data = volcano_toptable, x = ~x, y = ~y, z = ~logP,
             marker = list(size = marker_size, sizemode = 'diameter', 
@@ -256,17 +282,13 @@ volcano3D <- function(polar,
             color = ~switch(colour_scale,
                             "discrete" = sig,
                             "continuous" = I(hue)),
-            hoverinfo = 'text', 
+            hoverinfo = 'text', text = ~hover,
             colors = switch(colour_scale,
                             "discrete" = colours,
                             "continuous" = NULL),
-            text = ~paste0(label, 
-                           "<br>Theta = ", as.integer(angle_degrees), "\u00B0",
-                           "<br>r = ", formatC(r, digits = 3), 
-                           "<br>P = ", format(logP, digits = 3, 
-                                              scientific = 3)),
             type = "scatter3d", mode = "markers") %>%
         
+        # Add the cylindrical grid
         add_trace(x = polar_grid$x, y = polar_grid$y, z = polar_grid$z, 
                   color = I(grid_colour), line = list(width = 2),
                   showlegend = FALSE, type = "scatter3d", mode = "lines", 
@@ -277,15 +299,18 @@ volcano3D <- function(polar,
                   line = list(width = 2), showlegend = FALSE, 
                   type = "scatter3d", mode = "lines", hoverinfo = "none", 
                   inherit = FALSE) %>%
-        add_text(x = axis_labels$x, y = axis_labels$y, z = 0, 
-                 text = levels(polar@sampledata[, polar@contrast]),
+        add_text(x = axis_labels$x*axis_title_offset, 
+                 y = axis_labels$y*axis_title_offset, 
+                 z = 0, text = levels(polar@sampledata[, polar@contrast]),
                  color = I(axis_colour), type = "scatter3d", mode = "text", 
-                 textfont = list(size = 16),textposition = 'middle center', 
+                 textfont = list(size = 16), textposition = 'middle center', 
                  hoverinfo = 'none', showlegend = FALSE, inherit = FALSE) %>%
         # label z axis
-        add_text(x = c(rep(1.05*R*sinpi(axis_angle), grid@n_z_breaks), 
+        add_text(x = c(rep(1.05*axis_title_offset*R*sinpi(axis_angle), 
+                           grid@n_z_breaks), 
                        1.2*R*sinpi(axis_angle)),
-                 y = c(rep(1.05*R*cospi(axis_angle), grid@n_z_breaks), 
+                 y = c(rep(1.05*axis_title_offset*R*cospi(axis_angle), 
+                           grid@n_z_breaks), 
                        1.2*R*cospi(axis_angle)),
                  z = c(grid@z_breaks, h/2)*0.95,
                  text = c(grid@z_breaks, '-log<sub>10</sub>P'),
