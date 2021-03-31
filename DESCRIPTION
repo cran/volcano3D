@@ -2,10 +2,12 @@ Package: volcano3D
 Type: Package
 Title: Interactive Plotting of Three-Way Differential Expression
         Analysis
-Version: 1.1.0
+Version: 1.2.0
 Authors@R: c(person("Katriona", "Goldmann", role = c("aut", "cre"),
-                       email = "k.goldmann@qmul.ac.uk"),
-                person("Myles", "Lewis", role = c("aut", "ctb")))
+                       email = "k.goldmann@qmul.ac.uk",
+                       comment = c(ORCID = "0000-0002-9073-6323")),
+                person("Myles", "Lewis", role = c("aut"),
+                comment = c(ORCID = "0000-0001-9365-5345")))
 Maintainer: Katriona Goldmann <k.goldmann@qmul.ac.uk>
 URL: https://katrionagoldmann.github.io/volcano3D/index.html,
         https://github.com/KatrionaGoldmann/volcano3D
@@ -19,10 +21,10 @@ Depends: R (>= 3.5)
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
 NeedsCompilation: no
-Packaged: 2021-02-22 17:05:09 UTC; phd
+Packaged: 2021-03-31 14:27:10 UTC; phd
 Imports: plotly, ggplot2, ggpubr, ggrepel, methods
 Suggests: knitr, rmarkdown, kableExtra, usethis
-Author: Katriona Goldmann [aut, cre],
-  Myles Lewis [aut, ctb]
+Author: Katriona Goldmann [aut, cre] (<https://orcid.org/0000-0002-9073-6323>),
+  Myles Lewis [aut] (<https://orcid.org/0000-0001-9365-5345>)
 Repository: CRAN
-Date/Publication: 2021-02-22 17:50:02 UTC
+Date/Publication: 2021-03-31 14:40:02 UTC

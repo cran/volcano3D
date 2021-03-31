@@ -1,6 +1,6 @@
-eb346c87656bb728a7df2701f6989fb3 *DESCRIPTION
+a302ed492b4a58d2940c37bb4bd98594 *DESCRIPTION
 4ebeaf2ec182d6d83c327734019cd409 *NAMESPACE
-bbb8c25858c498a7c4d92ecb2be023f7 *NEWS.md
+ab99dc85bf93e927aec1df945ff4fd42 *NEWS.md
 a5fafb6a552fe3135de33c0f1cf7274f *R/boxplot_trio.R
 45b2c84b26bc900481e1c0cb20f1a579 *R/example_data.R
 496217ebc0fcce39852e1ab6da694817 *R/polar_coords.R
@@ -9,14 +9,14 @@ e9240a24196326db91ec42dbd051c10c *R/radial_ggplot.R
 b41b64932df53a68b81eaca9854902d2 *R/radial_plotly.R
 31eae4b015803e38ad650e91e27f70e2 *R/show_grid.R
 ac7c4c4f616407d49ac85ff6a9f5623d *R/significance_subset.R
-bf70d9631702cf3f9cb1c852166119fe *R/volcano3D.R
+2ad28632217ce95bc7ff7dcea10bdb46 *R/volcano3D.R
 85be5ca3cc50f471c92d14973aefe5d2 *R/volcano_trio.R
 49d4ea7bcefaf925ec48bc866b4801aa *R/zzz.R
 07971847e54bf3399f289832bb349a3b *build/vignette.rds
 210bd83a6e86a3a187234bb11078353f *data/example_data.rdata
 2ba74d0230355c6cb68bee5821c44eb6 *inst/WORDLIST
 0ec6e5f5106e722a3d9a5400d789b7f6 *inst/doc/Vignette.R
-b2a94add2f787eb5e9e080c05dcfad6c *inst/doc/Vignette.html
+cac0b7d5b15d68b62f3eab6edc5d62f5 *inst/doc/Vignette.html
 7f87d2bc3a49c586be17ab24c957d219 *inst/doc/Vignette.rmd
 4054b4d729553084bb987d716d398077 *inst/pkgdown/footer.html
 a6c3afff6bd4a865b391f0adba89c191 *man/boxplot_trio.Rd
@@ -31,7 +31,7 @@ b60d9fea6c2880c068f680f16cd247be *man/show_grid.Rd
 e5867995ae8ee973d9c679c9ac13db25 *man/syn_example_meta.Rd
 751a063f4a1fb5bafcbc6831ab8a5b21 *man/syn_example_p.Rd
 a48564cec7a8e6c47b1d0791704b5bb5 *man/syn_example_rld.Rd
-f7698d8bb1323748cb5080a710b2a072 *man/volcano3D.Rd
+32a3f47a7895b2a6c3dbc75ff73b527d *man/volcano3D.Rd
 07c1cc5c5b62204669a9fbd7759db627 *man/volcano_plot.Rd
 a64fee7fbd41f26cdb1cd04cf25712fc *man/volcano_trio.Rd
 7f87d2bc3a49c586be17ab24c957d219 *vignettes/Vignette.rmd
