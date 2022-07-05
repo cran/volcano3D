@@ -11,6 +11,7 @@ polar_grid(
   z_axis_ticks = NULL,
   axis_angle = 5/6,
   n_spokes = 12,
+  axes_from_origin = TRUE,
   ...
 )
 }
@@ -35,6 +36,9 @@ if z_vector is NULL).}
 
 \item{n_spokes}{the number of outward spokes to be plotted (default = 12)}
 
+\item{axes_from_origin}{Whether the axis should start at 0 or the first 
+break (default = TRUE)}
+
 \item{...}{optional parameters for \code{\link[base]{pretty}} on the r axis}
 }
 \value{
@@ -56,20 +60,10 @@ plot
 }
 \examples{
 data(example_data)
-syn_polar <- polar_coords(sampledata = syn_example_meta,
-                          contrast = "Pathotype",
-                          groups = NULL,
-                          pvalues = syn_example_p,
-                          expression = syn_example_rld,
-                          p_col_suffix = "pvalue",
-                          padj_col_suffix = "padj",
-                          non_sig_name = "Not Significant",
-                          multi_group_prefix = "LRT",
-                          significance_cutoff = 0.01,
-                          fc_col_suffix='log2FoldChange',
-                          fc_cutoff = 0.3)
+syn_polar <- polar_coords(outcome = syn_example_meta$Pathotype,
+                          data = t(syn_example_rld))
 
-grid <- polar_grid(r_vector=syn_polar@polar$r_zscore,
+grid <- polar_grid(r_vector=syn_polar@df[[1]]$r,
            z_vector=NULL,
            r_axis_ticks = NULL,
            z_axis_ticks = c(0, 8, 16, 32),
@@ -77,7 +71,7 @@ grid <- polar_grid(r_vector=syn_polar@polar$r_zscore,
 }
 \references{
 Lewis, Myles J., et al. (2019).
-\href{https://www.cell.com/cell-reports/fulltext/S2211-1247(19)31007-1}{
+\href{https://pubmed.ncbi.nlm.nih.gov/31461658/}{
 Molecular portraits of early rheumatoid arthritis identify clinical and
 treatment response phenotypes.}
 \emph{Cell reports}, \strong{28}:9

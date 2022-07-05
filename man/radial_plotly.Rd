@@ -6,30 +6,25 @@
 \usage{
 radial_plotly(
   polar,
-  colours = c("green3", "cyan", "blue", "purple", "red", "gold2"),
-  non_sig_colour = "grey60",
-  colour_scale = "discrete",
-  continuous_shift = 1.33,
+  type = 1,
+  colours = polar@scheme,
   label_rows = NULL,
   arrow_length = 50,
-  grid = NULL,
-  fc_or_zscore = "zscore",
   label_size = 14,
-  colour_code_labels = TRUE,
-  label_colour = NULL,
-  hover_text = "label",
+  colour_code_labels = FALSE,
+  label_colour = "black",
   grid_colour = "grey80",
-  axis_colour = "black",
-  marker_size = 6,
-  marker_alpha = 0.7,
+  grid_width = 1,
+  marker_size = 7,
+  marker_alpha = 0.8,
   marker_outline_colour = "white",
   marker_outline_width = 0.5,
   axis_title_size = 16,
   axis_label_size = 10,
+  axis_colour = "black",
+  axis_width = 2,
   axis_ticks = NULL,
   axis_angle = 5/6,
-  plot_height = 700,
-  plot_width = 700,
   ...
 )
 }
@@ -37,31 +32,16 @@ radial_plotly(
 \item{polar}{A polar object with the pvalues between groups of interest and
 polar coordinates. Created by \code{\link{polar_coords}}.}
 
-\item{colours}{A vector of colour names or hex triplets for each of the
-six groups. Default = c("green3", "cyan", "blue",
-"purple", "red", "gold2"). Colours are assigned in order: group1+,
-group1+group2+, group2+, group2+group3+, group3+, group1+group3+.}
+\item{type}{Numeric value whether to use scaled (z-score) or unscaled (fold
+change) as magnitude. Options are 1 = z-score (default) or 2 =
+unscaled/fold change.}
 
-\item{non_sig_colour}{The colour for non-significant markers
-(default = "grey60").}
-
-\item{colour_scale}{whether to use a 'discrete' or 'continuous' colour scale
-(default = 'discrete').}
-
-\item{continuous_shift}{The number of radians (between 0 and 6)
-to offset the continuous colour scale by. This is calculated by converting
-the angle to a hue using \code{\link[grDevices]{hsv}} where 0 corresponds to
-the colour scale starting with red and 360 with magenta (default = 2).}
+\item{colours}{A vector of colour names or hex triplets for the
+non-significant points and each of the six groups.}
 
 \item{label_rows}{A vector of row names or numbers to label.}
 
 \item{arrow_length}{The length of label arrows (default = 50).}
-
-\item{grid}{An optional grid object. If NULL this will be calculated using
-the default values of \code{\link{polar_grid}}.}
-
-\item{fc_or_zscore}{Whether to use the z-score or fold change as magnitude.
-Options are 'zscore' (default) or 'fc'.}
 
 \item{label_size}{Font size of labels/annotations (default = 14)}
 
@@ -70,30 +50,13 @@ coded. If FALSE label_colour is used.}
 
 \item{label_colour}{HTML colour of annotation labels if not colour coded.}
 
-\item{hover_text}{A character string containing the argument for hover text
-(default="label"). Possible columns include: \itemize{
-\item "Name" or "label": name and label column for each marker
-\item paste(group, "_axis") the position for each marker on a given axis
-\item "x_zscore", "y_zscore" or "r_zscore": The position according to z-score
-\item "x_fc", "y_fc" or "r_fc": The position according to fold change
-\item "angle", "angle_degrees": Then marker angle
-\item "max_exp" or "sig": The maximally expressed group or significant group
-\item "col" or "hue": The colour or hue of the marker
-\item paste0(group A, "_", group B, "_pvalue"): The pvalue for comparisons
-\item paste0(group A, "_", group B, "_padj"): The pvalue for comparisons
-\item paste0(group A, "_", group B, "_logFC"): The pvalue for comparisons
-\item paste0(multi_group_test, "_pvalue"), 
-paste0(multi_group_test, "_padj"),  paste0(multi_group_test, "_logFC"): 
-The stats for all multi-group tests.
-}}
+\item{grid_colour}{The colour of the grid (default="grey80")}
 
-\item{grid_colour}{The colour of the grid (default="grey80").}
+\item{grid_width}{The width of the grid lines (default=1)}
 
-\item{axis_colour}{The colour of the grid axes and labels (default="black").}
+\item{marker_size}{Size of the markers (default = 6)}
 
-\item{marker_size}{Size of the markers (default = 6).}
-
-\item{marker_alpha}{Opacity for the markers (default = 0.7).}
+\item{marker_alpha}{Opacity for the markers (default = 0.7)}
 
 \item{marker_outline_colour}{Colour for marker outline (default = white)}
 
@@ -103,14 +66,14 @@ The stats for all multi-group tests.
 
 \item{axis_label_size}{Font size for axis labels (default = 10)}
 
+\item{axis_colour}{The colour of the grid axes and labels (default="black")}
+
+\item{axis_width}{The width of the axis lines (default=2)}
+
 \item{axis_ticks}{A numerical vector of radial axis tick breaks. If
 NULL this will be calculated using \code{\link[base]{pretty}}.}
 
 \item{axis_angle}{Angle in radians for the radial axis (default = 5/6).}
-
-\item{plot_height}{Plot height in px (default=700).}
-
-\item{plot_width}{Plot width in px (default=700).}
 
 \item{...}{Optional parameters to pass to
 \code{\link[volcano3D]{polar_grid}}.}
@@ -125,23 +88,14 @@ expression onto a polar coordinates.
 }
 \examples{
 data(example_data)
-syn_polar <- polar_coords(sampledata = syn_example_meta,
-                          contrast = "Pathotype",
-                          groups = NULL,
-                          pvalues = syn_example_p,
-                          expression = syn_example_rld,
-                          p_col_suffix = "pvalue",
-                          padj_col_suffix = "padj",
-                          non_sig_name = "Not Significant",
-                          multi_group_prefix = "LRT",
-                          significance_cutoff = 0.01,
-                          fc_cutoff = 0.3)
+syn_polar <- polar_coords(outcome = syn_example_meta$Pathotype,
+                          data = t(syn_example_rld))
 
-radial_plotly(polar = syn_polar, label_rows = c("SLAMF6"))
+radial_plotly(polar = syn_polar, label_rows = c("COBL"))
 }
 \references{
 Lewis, Myles J., et al. (2019).
-\href{https://www.cell.com/cell-reports/fulltext/S2211-1247(19)31007-1}{
+\href{https://pubmed.ncbi.nlm.nih.gov/31461658/}{
 Molecular portraits of early rheumatoid arthritis identify clinical and
 treatment response phenotypes.}
 \emph{Cell reports}, \strong{28}:9

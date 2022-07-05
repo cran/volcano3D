@@ -4,7 +4,7 @@
 \alias{show_grid}
 \title{Plots grid objects for inspection using plotly}
 \usage{
-show_grid(grid, plot_height = 700, axis_angle = 0)
+show_grid(grid, plot_height = 700, axis_angle = 0, z_axis_title_offset = 1.2)
 }
 \arguments{
 \item{grid}{A grid object produced by \code{\link{polar_grid}}.}
@@ -12,6 +12,8 @@ show_grid(grid, plot_height = 700, axis_angle = 0)
 \item{plot_height}{The plot height in px (default=700),}
 
 \item{axis_angle}{The angle in radians at which to add axis (default=0).}
+
+\item{z_axis_title_offset}{Offset for z axis title (default=1.2).}
 }
 \value{
 Returns a list containing a polar and cylindrical coordinate system.
@@ -22,21 +24,11 @@ coordinates
 }
 \examples{
 data(example_data)
-syn_polar <- polar_coords(sampledata = syn_example_meta,
-                       contrast = "Pathotype",
-                       groups = NULL,
-                       pvalues = syn_example_p,
-                       expression = syn_example_rld,
-                       p_col_suffix = "pvalue",
-                       padj_col_suffix = "padj",
-                       non_sig_name = "Not Significant",
-                       multi_group_prefix = "LRT",
-                       significance_cutoff = 0.01,
-                       fc_col_suffix='log2FoldChange',
-                       fc_cutoff = 0.3)
+syn_polar <- polar_coords(outcome = syn_example_meta$Pathotype,
+                          data = t(syn_example_rld))
 
-grid <- polar_grid(r_vector=syn_polar@polar$r_zscore,
-        z_vector=-log(syn_polar@pvalues$LRT_pvalue),
+grid <- polar_grid(r_vector=syn_polar@df[[1]]$r,
+        z_vector=syn_polar@df[[1]]$z,
         r_axis_ticks = NULL,
         z_axis_ticks = NULL)
 p <- show_grid(grid)
@@ -45,7 +37,7 @@ p$cyl
 }
 \references{
 Lewis, Myles J., et al. (2019).
-\href{https://www.cell.com/cell-reports/fulltext/S2211-1247(19)31007-1}{
+\href{https://pubmed.ncbi.nlm.nih.gov/31461658/}{
 Molecular portraits of early rheumatoid arthritis identify clinical and
 treatment response phenotypes.}
 \emph{Cell reports}, \strong{28}:9

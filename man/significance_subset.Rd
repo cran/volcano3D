@@ -13,32 +13,23 @@ interest. Created by \code{\link{polar_coords}}.}
 \item{significance}{Which significance factors to subset to. If NULL 
 levels(syn_polar@polar$sig)[1] is selected.}
 
-\item{output}{What object to return. Options are "pvalues", "expression", 
-"polar_df" for subset data frames or "polar" for subset polar class object.}
+\item{output}{What object to return. Options are "pvals", "padj", "data",
+"df" for subset dataframes, or "polar" to subset the entire 'volc3d' class
+object.}
 }
 \description{
 Subsets data according to the significance groups.
 }
 \examples{
 data(example_data)
-syn_polar <- polar_coords(sampledata = syn_example_meta,
-                          contrast = "Pathotype",
-                          groups = NULL,
-                          pvalues = syn_example_p,
-                          expression = syn_example_rld,
-                          p_col_suffix = "pvalue",
-                          padj_col_suffix = "padj",
-                          non_sig_name = "Not Significant",
-                          multi_group_prefix = "LRT",
-                          significance_cutoff = 0.01,
-                          fc_col_suffix='log2FoldChange',
-                          fc_cutoff = 0.3)
+syn_polar <- polar_coords(outcome = syn_example_meta$Pathotype,
+                          data = t(syn_example_rld))
 
-subset <- significance_subset(syn_polar, "Lymphoid+", "polar_df")
+subset <- significance_subset(syn_polar, "L+", "df")
 }
 \references{
 Lewis, Myles J., et al. (2019).
-\href{https://www.cell.com/cell-reports/fulltext/S2211-1247(19)31007-1}{
+\href{https://pubmed.ncbi.nlm.nih.gov/31461658/}{
 Molecular portraits of early rheumatoid arthritis identify clinical and
 treatment response phenotypes.}
 \emph{Cell reports}, \strong{28}:9
