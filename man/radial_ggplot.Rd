@@ -23,14 +23,14 @@ radial_ggplot(
   marker_size = 3,
   marker_outline_colour = "white",
   marker_outline_width = 0.5,
-  axis_angle = 1/6,
   legend_size = 20,
   ...
 )
 }
 \arguments{
-\item{polar}{A 'volc3d' object with the p-values between groups of interest and
-polar coordinates. Created by \code{\link{polar_coords}}.}
+\item{polar}{A 'volc3d' object with the p-values between groups of interest
+and polar coordinates created by \code{\link{polar_coords}},
+\code{\link{deseq_polar}} or \code{\link{voom_polar}}.}
 
 \item{type}{Numeric value whether to use scaled (z-score) or unscaled (fold
 change) as magnitude. Options are 1 = z-score (default) or 2 =
@@ -46,7 +46,7 @@ the six groups.}
 \item{label_size}{Font size of labels/annotations (default = 5).}
 
 \item{colour_code_labels}{Logical whether label annotations should be colour
-coded. If FALSE `label_colour` is used.}
+coded. If FALSE \code{label_colour} is used.}
 
 \item{label_colour}{Colour of annotation labels if not colour coded}
 
@@ -70,20 +70,18 @@ coded. If FALSE `label_colour` is used.}
 
 \item{marker_outline_width}{Width for marker outline (default = 0.5)}
 
-\item{axis_angle}{Angle for the radial axis labels in pi radians
-(default = 1/6).}
-
 \item{legend_size}{Size for the legend text (default = 20).}
 
-\item{...}{Optional grid parameters to pass to
-\code{\link[volcano3D]{polar_grid}}.}
+\item{...}{Optional parameters passed to \code{\link[volcano3D]{polar_grid}}
+e.g. \code{r_axis_ticks} or \code{axis_angle}}
 }
 \value{
 Returns a polar 'ggplot' object featuring variables on a tri-axis
 radial graph
 }
 \description{
-This function creates a radar plot using 'ggplot' for a three-way comparison
+This function creates a 3-way polar plot using 'ggplot' for a three-class
+comparison.
 }
 \examples{
 data(example_data)
@@ -98,5 +96,8 @@ Lewis, Myles J., et al. (2019).
 Molecular portraits of early rheumatoid arthritis identify clinical and
 treatment response phenotypes.}
 \emph{Cell reports}, \strong{28}:9
+}
+\seealso{
+\code{\link{polar_coords}}
 }
 \keyword{hplot}

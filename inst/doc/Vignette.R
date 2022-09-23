@@ -104,8 +104,11 @@ syn_polar <- polar_coords(outcome = syn_example_meta$Pathotype,
 #  
 #  volcano3D(resl)
 
-## ---- eval=FALSE, fig.height=5------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  radial_plotly(syn_polar)
+
+## ---- eval=FALSE--------------------------------------------------------------
+#  radial_plotly(syn_polar) %>% toWebGL()
 
 ## ---- fig.height=4.5, fig.width=7---------------------------------------------
 radial_ggplot(syn_polar,

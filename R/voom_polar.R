@@ -2,13 +2,15 @@
 
 #' Convert RNA-Seq count data to a volcano3d object using 'limma voom'
 #'
-#' This function takes a design formula, metadata and raw count data and uses
-#' 'limma voom' to analyse the data. The results are converted to a 'volc3d'
-#' object ready for plotting a 3d volcano plot or polar plot.
+#' This function is used instead of \code{\link{polar_coords}} if you have raw
+#' RNA-Seq count data. The function takes a design formula, metadata and raw
+#' RNA-Seq count data and uses 'limma voom' to analyse the data. The results are
+#' converted to a 'volc3d' object ready for plotting a 3d volcano plot or polar
+#' plot.
 #'
-#' @param formula Design formula which must be of the form `~ 0 + outcome + ...`.
-#'   The 3-way outcome variable must be the first variable after the '0', and
-#'   this variable must be a factor with exactly 3 levels.
+#' @param formula Design formula which must be of the form `~ 0 + outcome +
+#'   ...`. The 3-way outcome variable must be the first variable after the '0',
+#'   and this variable must be a factor with exactly 3 levels.
 #' @param metadata Matrix or dataframe containing metadata as referenced by
 #'   `formula`
 #' @param counts Matrix containing raw gene expression count data
@@ -18,7 +20,15 @@
 #' @param filter_pairwise Logical whether adjusted p-value pairwise statistical
 #'   tests are only conducted on genes which reach significant adjusted p-value
 #'   cut-off on the group likelihood ratio test
-#' @param ... Optional arguments passed to [polar_coords()]
+#' @param ... Optional arguments passed to \code{\link{polar_coords}}
+#' @return Calls \code{\link{polar_coords}} to return an S4 'volc3d' object
+#' @details
+#' Statistical results for the group and pairwise comparisons are calculated
+#' using the 'limma voom' pipeline and the results passed to
+#' \code{\link{polar_coords}} to generate a 'volc3d' object ready for plotting a
+#' 3d volcano plot or polar plot.
+#' @seealso  \code{\link{polar_coords}}, \code{\link{deseq_polar}},
+#'   \code{\link[limma:voom]{voom}} in the limma package
 #' 
 #' @examples
 #' if (requireNamespace("limma", quietly = TRUE) & 
@@ -43,6 +53,8 @@ voom_polar <- function(formula, metadata, counts,
                        pcutoff = 0.05,
                        padj.method = "BH",
                        filter_pairwise = TRUE, ...) {
+  
+  # Check packages and input data
   if (!requireNamespace("edgeR", quietly = TRUE)) {
     stop("Can't find package edgeR. Try:
            BiocManager::install('edgeR')", call. = FALSE)
@@ -52,11 +64,13 @@ voom_polar <- function(formula, metadata, counts,
            BiocManager::install('limma')", call. = FALSE)
   }
   # force formula to have no intercept
-  if (attr(terms(formula), "intercept") != 0) formula <- update(formula, ~ . -1)
+  if (attr(terms(formula), "intercept") != 0) formula <- update(formula, ~. -1)
   modterms <- attr(terms(formula), "term.labels")
   outcome_col <- modterms[1]
-  if (nlevels(metadata[, outcome_col]) != 3) stop("Outcome does not have 3 levels")
+  if (nlevels(metadata[, outcome_col]) != 3) 
+    stop("Outcome does not have 3 levels")
   
+  # Set up data
   vdesign <- model.matrix(formula, data = metadata)
   contrast_set <- list(paste0(colnames(vdesign)[1] , "-", colnames(vdesign)[2]),
                        paste0(colnames(vdesign)[1] , "-", colnames(vdesign)[3]),
@@ -69,7 +83,8 @@ voom_polar <- function(formula, metadata, counts,
   keep <- edgeR::filterByExpr(dge, vdesign)
   dge <- dge[keep, , keep.lib.sizes = FALSE]
   dge <- edgeR::calcNormFactors(dge)
-  # voom
+  
+  # Perform voom
   v <- limma::voom(dge, vdesign, plot = FALSE)
   fit1 <- limma::lmFit(v, vdesign)
   fit <- limma::contrasts.fit(fit1, contrast.matrix) 
@@ -86,8 +101,12 @@ voom_polar <- function(formula, metadata, counts,
                  Pvals_limma_DE[[1]]$P.Value, 
                  Pvals_limma_DE[[2]]$P.Value, 
                  Pvals_limma_DE[[3]]$P.Value)
+
+  # Multiple testing correction
   LRTpadj <- qval(Pvals_overall, method = padj.method)
-  ind <- if (filter_pairwise) LRTpadj < pcutoff else rep_len(TRUE, length(LRTpadj))
+  ind <- if(filter_pairwise){
+    LRTpadj < pcutoff
+  } else {rep_len(TRUE, length(LRTpadj))}
   pairadj <- apply(pvals[, 2:4], 2, function(res) {
     out <- rep_len(NA, length(LRTpadj))
     out[ind] <- qval(res[ind], method = padj.method)
@@ -95,6 +114,9 @@ voom_polar <- function(formula, metadata, counts,
   })
   padj <- cbind(LRTpadj, pairadj)
   
-  polar_coords(metadata[, outcome_col], t(log2(counts[keep, ] + 1)), pvals, padj, pcutoff, ...)
+  out <- polar_coords(metadata[, outcome_col], t(log2(counts[keep, ] + 1)), 
+               pvals, padj, pcutoff, ...)
+  out@df$type <- "voom_polar"
+  out
 }
 

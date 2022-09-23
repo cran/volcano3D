@@ -2,15 +2,17 @@
 #'
 #' This function creates an interactive plotly object which maps differential
 #' expression onto a polar coordinates.
-#' @param polar A polar object with the pvalues between groups of interest and
-#' polar coordinates. Created by \code{\link{polar_coords}}.
-#' @param type Numeric value whether to use scaled (z-score) or unscaled (fold
-#'   change) as magnitude. Options are 1 = z-score (default) or 2 =
+#' 
+#' @param polar A 'volc3d' object with the p-values between groups of interest
+#'   and polar coordinates created by \code{\link{polar_coords}},
+#'   \code{\link{deseq_polar}} or \code{\link{voom_polar}}.
+#' @param type Numeric value whether to use scaled (Z-score) or unscaled (fold
+#'   change) as magnitude. Options are 1 = Z-score (default) or 2 =
 #'   unscaled/fold change.
 #' @param colours A vector of colour names or hex triplets for the
 #'   non-significant points and each of the six groups.
 #' @param label_rows A vector of row names or numbers to label.
-#' @param arrow_length The length of label arrows (default = 50).
+#' @param arrow_length The length of label arrows (default = 80).
 #' @param label_size Font size of labels/annotations (default = 14)
 #' @param colour_code_labels Logical whether label annotations should be colour
 #' coded. If FALSE label_colour is used.
@@ -25,17 +27,18 @@
 #' @param axis_label_size Font size for axis labels (default = 10)
 #' @param axis_colour The colour of the grid axes and labels (default="black")
 #' @param axis_width The width of the axis lines (default=2)
-#' @param axis_ticks A numerical vector of radial axis tick breaks. If
-#' NULL this will be calculated using \code{\link[base]{pretty}}.
-#' @param axis_angle Angle in radians for the radial axis (default = 5/6).
-#' @param ... Optional parameters to pass to
-#' \code{\link[volcano3D]{polar_grid}}.
-#' @return Returns a plotly plot featuring variables on a tri-axis
-#' radial graph
+#' @param ... Optional parameters passed to \code{\link[volcano3D]{polar_grid}}
+#'   e.g. `r_axis_ticks` or `axis_angle`
+#' @return Returns a plotly plot featuring variables on a tri-axis radial graph
+#' @details
+#' This function builds a layered plotly object. By default this produces an SVG
+#' output, but this can be slow with 1000s of points. For large number of points
+#' we recommend switching to webGL by piping to `toWebGL()` as shown in the
+#' examples.
+#' 
+#' @seealso \code{\link{polar_coords}}
 #' @importFrom plotly plot_ly add_trace add_text add_markers layout
 #' @importFrom magrittr %>%
-#' @importFrom stats p.adjust setNames
-#' @importFrom grDevices hsv
 #' @importFrom methods is
 #' @references
 #' Lewis, Myles J., et al. (2019).
@@ -51,13 +54,18 @@
 #'                           data = t(syn_example_rld))
 #'
 #' radial_plotly(polar = syn_polar, label_rows = c("COBL"))
-
+#' 
+#' ## Faster webGL version for large numbers of points
+#' library(plotly)
+#' radial_plotly(polar = syn_polar, label_rows = c("COBL")) %>%
+#'   toWebGL()
+#'
 
 radial_plotly <- function(polar,
                           type = 1,
                           colours = polar@scheme,
                           label_rows = NULL,
-                          arrow_length = 50,
+                          arrow_length = 80,
                           label_size = 14,
                           colour_code_labels = FALSE,
                           label_colour = "black",
@@ -71,8 +79,6 @@ radial_plotly <- function(polar,
                           axis_label_size = 10,
                           axis_colour = "black",
                           axis_width = 2,
-                          axis_ticks = NULL,
-                          axis_angle = 5/6,
                           ...){
   if (is(polar, "polar")) {
     args <- as.list(match.call())[-1]
@@ -80,7 +86,7 @@ radial_plotly <- function(polar,
   }
   if(! is(polar, "volc3d")) stop("Not a 'volc3d' class object")
   df <- polar@df[[type]]
-  grid <- polar_grid(df$r, df$z)
+  grid <- polar_grid(df$r, df$z, ...)
   grid@polar_grid <- grid@polar_grid[grid@polar_grid$area != "cylinder", ]
   polar_grid <- grid@polar_grid
   axes <- grid@axes
@@ -106,14 +112,14 @@ radial_plotly <- function(polar,
            y = row$y,
            text = rownames(row),
            textangle = 0,
-           ax = sign(row$x)*arrow_length*grid@r*cos(theta),
-           ay  = -1*sign(row$x)*arrow_length*grid@r*sin(theta),
+           ax = sign(row$x)*arrow_length*cos(theta),
+           ay  = -sign(row$x)*arrow_length*sin(theta),
            font = list(color = ac, size = label_size),
            arrowcolor = ac,
            arrowwidth = 1,
            arrowhead = 0,
-           xanchor = ifelse(row$x < 0, "right", "left"),
-           xanchor = ifelse(row$y < 0, "bottom", "top"),
+           xanchor = "auto",
+           yanchor = "auto",
            arrowsize = 1.5)
     })
   } else {annot <- list()}
