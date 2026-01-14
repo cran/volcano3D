@@ -1,7 +1,7 @@
 Package: volcano3D
 Type: Package
 Title: 3D Volcano Plots and Polar Plots for Three-Class Data
-Version: 2.0.9
+Version: 2.0.11
 Authors@R: c(person("Katriona", "Goldmann", role = c("aut", "cre"),
                        email = "katrionagoldmann@gmail.com",
                        comment = c(ORCID = "0000-0002-9073-6323")),
@@ -26,14 +26,15 @@ LazyData: true
 biocViews:
 Depends: R (>= 3.5)
 VignetteBuilder: knitr
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.3
 NeedsCompilation: no
-Packaged: 2023-05-17 10:02:31 UTC; kgoldmann
+Packaged: 2026-01-14 15:06:43 UTC; elisabetta
 Imports: plotly, ggplot2, ggpubr, htmlwidgets, magrittr, methods,
         Rfast, rlang, matrixTests
 Suggests: DESeq2, edgeR, limma, qvalue, SummarizedExperiment, knitr,
-        rmarkdown, kableExtra, usethis, easylabel
-Author: Katriona Goldmann [aut, cre] (<https://orcid.org/0000-0002-9073-6323>),
-  Myles Lewis [aut] (<https://orcid.org/0000-0001-9365-5345>)
+        rmarkdown, usethis, easylabel
+Author: Katriona Goldmann [aut, cre] (ORCID:
+    <https://orcid.org/0000-0002-9073-6323>),
+  Myles Lewis [aut] (ORCID: <https://orcid.org/0000-0001-9365-5345>)
 Repository: CRAN
-Date/Publication: 2023-05-17 11:00:02 UTC
+Date/Publication: 2026-01-14 23:50:03 UTC

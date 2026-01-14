@@ -28,7 +28,6 @@ fig.height = 7,
 fig.width=7, 
 fig.align = "center")
 library(knitr)
-library(kableExtra)
 ```
 
 ## 2x3-way analysis
@@ -39,7 +38,6 @@ library(kableExtra)
 library(ggplot2)
 library(ggpubr)
 library(plotly)
-library(usethis)
 ```
 
 The main work flow for using volcano3D is ideal for comparing high dimensional
@@ -239,9 +237,8 @@ generate plots in base graphics or plotly.
 ## Citation
 
 volcano3D was developed by the bioinformatics team at the
-[Experimental Medicine & Rheumatology department](https://www.qmul.ac.uk/whri/emr/)
-and [Centre for Translational Bioinformatics](https://www.qmul.ac.uk/c4tb/) at
-Queen Mary University London.
+[Experimental Medicine & Rheumatology department](https://www.qmul.ac.uk/whri/emr/) at
+Queen Mary University of London.
 
 If you use this package please cite as:
 

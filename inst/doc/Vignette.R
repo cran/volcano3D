@@ -6,20 +6,18 @@ fig.height = 7,
 fig.width=7, 
 fig.align = "center")
 library(knitr)
-library(kableExtra)
 
-## ---- echo=FALSE--------------------------------------------------------------
+## ----echo=FALSE---------------------------------------------------------------
 library(ggplot2)
 library(ggpubr)
 library(plotly)
-library(usethis)
 
-## ---- eval = FALSE------------------------------------------------------------
-#  install.packages("volcano3D")
+## ----eval = FALSE-------------------------------------------------------------
+# install.packages("volcano3D")
 
-## ---- eval = FALSE------------------------------------------------------------
-#  library(devtools)
-#  install_github("KatrionaGoldmann/volcano3D")
+## ----eval = FALSE-------------------------------------------------------------
+# library(devtools)
+# install_github("KatrionaGoldmann/volcano3D")
 
 ## -----------------------------------------------------------------------------
 library(volcano3D)
@@ -30,7 +28,7 @@ data("example_data")
 ## -----------------------------------------------------------------------------
 kable(table(syn_example_meta$Pathotype), col.names = c("Pathotype", "Count"))
 
-## ---- echo=FALSE--------------------------------------------------------------
+## ----echo=FALSE---------------------------------------------------------------
 mytable = data.frame(
   outcome = c("outcome\ 
   \n\n(required)", 
@@ -67,8 +65,7 @@ mytable = data.frame(
   
 )
 
-kable(t(mytable), row.names = FALSE, col.names = c("Variable", "Details")) %>%
-  kable_styling(font_size=11)
+kable(t(mytable), row.names = FALSE, col.names = c("Variable", "Details")) 
 
 ## -----------------------------------------------------------------------------
 data("example_data")
@@ -77,46 +74,46 @@ syn_polar <- polar_coords(outcome = syn_example_meta$Pathotype,
                           data = t(syn_example_rld))
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  library(DESeq2)
-#  
-#  # setup initial dataset from Tximport
-#  dds <- DESeqDataSetFromTximport(txi = syn_txi,
-#                                 colData = syn_metadata,
-#                                 design = ~ Pathotype + Batch + Gender)
-#  # initial analysis run
-#  dds_DE <- DESeq(dds)
-#  # likelihood ratio test on 'Pathotype'
-#  dds_LRT <- DESeq(dds, test = "LRT", reduced = ~ Batch + Gender, parallel = TRUE)
-#  
-#  # create 'volc3d' class object for plotting
-#  res <- deseq_polar(dds_DE, dds_LRT, "Pathotype")
-#  
-#  # plot 3d volcano plot
-#  volcano3D(res)
+# library(DESeq2)
+# 
+# # setup initial dataset from Tximport
+# dds <- DESeqDataSetFromTximport(txi = syn_txi,
+#                                colData = syn_metadata,
+#                                design = ~ Pathotype + Batch + Gender)
+# # initial analysis run
+# dds_DE <- DESeq(dds)
+# # likelihood ratio test on 'Pathotype'
+# dds_LRT <- DESeq(dds, test = "LRT", reduced = ~ Batch + Gender, parallel = TRUE)
+# 
+# # create 'volc3d' class object for plotting
+# res <- deseq_polar(dds_DE, dds_LRT, "Pathotype")
+# 
+# # plot 3d volcano plot
+# volcano3D(res)
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  library(limma)
-#  library(edgeR)
-#  
-#  syn_tpm <- syn_txi$counts  # raw counts
-#  
-#  resl <- voom_polar(~ 0 + Pathotype + Batch + Gender, syn_metadata, syn_tpm)
-#  
-#  volcano3D(resl)
+# library(limma)
+# library(edgeR)
+# 
+# syn_tpm <- syn_txi$counts  # raw counts
+# 
+# resl <- voom_polar(~ 0 + Pathotype + Batch + Gender, syn_metadata, syn_tpm)
+# 
+# volcano3D(resl)
 
-## ---- eval=FALSE--------------------------------------------------------------
-#  radial_plotly(syn_polar)
+## ----eval=FALSE---------------------------------------------------------------
+# radial_plotly(syn_polar)
 
-## ---- eval=FALSE--------------------------------------------------------------
-#  radial_plotly(syn_polar) %>% toWebGL()
+## ----eval=FALSE---------------------------------------------------------------
+# radial_plotly(syn_polar) %>% toWebGL()
 
-## ---- fig.height=4.5, fig.width=7---------------------------------------------
+## ----fig.height=4.5, fig.width=7----------------------------------------------
 radial_ggplot(syn_polar,
               marker_size = 2.3,
               legend_size = 10) +
   theme(legend.position = "right")
 
-## ---- fig.height = 3.2, fig.width = 7-----------------------------------------
+## ----fig.height = 3.2, fig.width = 7------------------------------------------
 plot1 <- boxplot_trio(syn_polar,
                       value = "COBL",
                       text_size = 7,
@@ -142,21 +139,21 @@ plot3 <- boxplot_trio(syn_polar,
 
 ggarrange(plot1, plot2, plot3, ncol=3)
 
-## ---- eval=FALSE, fig.height=5------------------------------------------------
-#  p <- volcano3D(syn_polar)
-#  p
+## ----eval=FALSE, fig.height=5-------------------------------------------------
+# p <- volcano3D(syn_polar)
+# p
 
 ## ----volcano3D, echo = FALSE, message=FALSE, fig.align='center', out.width='80%', out.extra='style="border: 0;"'----
 knitr::include_graphics("volcano3D.png")
 
-## ---- eval=FALSE--------------------------------------------------------------
-#  add_animation(p)
+## ----eval=FALSE---------------------------------------------------------------
+# add_animation(p)
 
-## ---- eval=FALSE--------------------------------------------------------------
-#  p %>% plotly::config(toImageButtonOptions = list(format = "svg"))
+## ----eval=FALSE---------------------------------------------------------------
+# p %>% plotly::config(toImageButtonOptions = list(format = "svg"))
 
-## ---- eval=FALSE--------------------------------------------------------------
-#  htmlwidgets::saveWidget(as_widget(p), "volcano3D.html")
+## ----eval=FALSE---------------------------------------------------------------
+# htmlwidgets::saveWidget(as_widget(p), "volcano3D.html")
 
 ## -----------------------------------------------------------------------------
 citation("volcano3D")
